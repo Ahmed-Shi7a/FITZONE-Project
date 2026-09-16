@@ -1,0 +1,24 @@
+<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+  @for (kpi of kpiCards(); track kpi.label) {
+    <div class="glow-card p-6">
+      <div class="text-xs uppercase tracking-wide text-white/40 mb-2">{{ kpi.label }}</div>
+      <div class="text-3xl font-display font-bold" [class.text-neon-orange-light]="kpi.accent === 'orange'" [class.text-neon-blue]="kpi.accent === 'blue'">
+        {{ kpi.value }}
+      </div>
+    </div>
+  }
+</div>
+<div class="glow-card p-6">
+  <h2 class="font-display text-lg font-bold mb-4">Plan Distribution</h2>
+  <div class="space-y-3">
+    @for (p of plans(); track p.id) {
+      <div class="flex items-center gap-4">
+        <div class="w-28 text-sm text-white/60">{{ p.name }}</div>
+        <div class="flex-1 h-3 bg-bg-panel rounded-full overflow-hidden">
+          <div class="h-full bg-gradient-to-r from-neon-orange to-neon-blue" [style.width.%]="(p.activeMembers / 250) * 100"></div>
+        </div>
+        <div class="w-16 text-right text-sm text-white/50">{{ p.activeMembers }}</div>
+      </div>
+    }
+  </div>
+</div>

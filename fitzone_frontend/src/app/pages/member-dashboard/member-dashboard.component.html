@@ -1,0 +1,37 @@
+<div class="min-h-screen bg-bg-deep">
+  <app-navbar></app-navbar>
+
+  <div class="section-container py-10">
+    <!-- Profile header -->
+    <div class="glow-card p-6 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-neon-orange to-neon-blue flex items-center justify-center font-display font-bold text-xl">
+          {{ auth.currentUser()?.avatarInitials }}
+        </div>
+        <div>
+          <h1 class="font-display text-2xl font-bold">{{ auth.currentUser()?.name }}</h1>
+          <p class="text-white/50 text-sm">Member since {{ auth.currentUser()?.joinDate }}</p>
+        </div>
+      </div>
+      <span class="badge-neon w-fit">{{ currentPlan()?.name ?? 'No Plan' }} Plan</span>
+    </div>
+
+    <!-- Nested route tab nav -->
+    <div class="flex flex-wrap gap-2 mb-8 border-b border-white/5 pb-3">
+      @for (t of tabs; track t.path) {
+        <a
+          [routerLink]="t.path"
+          routerLinkActive="bg-neon-orange text-white"
+          class="px-4 py-2 rounded-lg font-display text-sm font-semibold transition-colors text-white/50 hover:text-white">
+          {{ t.label }}
+        </a>
+      }
+    </div>
+
+    <!-- Child route renders here: overview / timetable -->
+    <router-outlet></router-outlet>
+  </div>
+
+  <app-footer></app-footer>
+  <app-toast></app-toast>
+</div>

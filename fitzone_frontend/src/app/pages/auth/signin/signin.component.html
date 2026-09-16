@@ -1,0 +1,44 @@
+<app-auth-layout headline="WELCOME BACK, ATHLETE." subline="Sign in to view your plan, book classes, and keep the streak alive.">
+  <div class="glow-card p-8">
+    <h1 class="font-display text-3xl font-bold mb-1">Sign In</h1>
+    <p class="text-white/50 text-sm mb-6">Access your FITZONE account.</p>
+
+
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+      <div>
+        <label class="text-sm text-white/60 mb-1 block">Email</label>
+        <input type="email" formControlName="email" class="input-neon"
+          [class.invalid]="form.controls.email.invalid && form.controls.email.touched"
+          placeholder="you@fitzone.com" />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <p class="text-red-400 text-xs mt-1">Enter a valid email address.</p>
+        }
+      </div>
+      <div>
+        <label class="text-sm text-white/60 mb-1 block">Password</label>
+        <input type="password" formControlName="password" class="input-neon"
+          [class.invalid]="form.controls.password.invalid && form.controls.password.touched"
+          placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <p class="text-red-400 text-xs mt-1">Password must be at least 4 characters.</p>
+        }
+      </div>
+
+      @if (errorMsg()) {
+        <div class="text-red-300 text-sm bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2">{{ errorMsg() }}</div>
+      }
+
+      <button type="submit" class="btn-neon w-full" [disabled]="loading()">
+        @if (loading()) { Signing in... } @else { Sign In }
+      </button>
+      <button type="button" class="w-full text-xs text-white/40 hover:text-neon-orange-light underline underline-offset-2" (click)="useDemo()">
+        Use demo credentials
+      </button>
+    </form>
+
+    <p class="text-center text-sm text-white/50 mt-6">
+      Don't have an account? <a routerLink="/signup" class="text-neon-orange-light font-semibold">Sign Up</a>
+    </p>
+  </div>
+</app-auth-layout>

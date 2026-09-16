@@ -1,0 +1,84 @@
+<div class="glow-card p-6 overflow-x-auto">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="font-display text-lg font-bold">Members</h2>
+    <span class="text-white/40 text-sm">{{ members().length }} total</span>
+  </div>
+  <table class="w-full text-sm min-w-[600px]">
+    <thead>
+      <tr class="text-left text-white/40 border-b border-white/5 uppercase text-xs">
+        <th class="py-2 pr-4">Name</th>
+        <th class="py-2 pr-4">Email</th>
+        <th class="py-2 pr-4">Plan</th>
+        <th class="py-2 pr-4">Joined</th>
+        <th class="py-2 pr-4 text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (m of members(); track m._id) {
+        <tr class="border-b border-white/5 hover:bg-bg-panel/60">
+          <td class="py-3 pr-4 font-medium">{{ m.name }}</td>
+          <td class="py-3 pr-4 text-white/60">{{ m.email }}</td>
+          <td class="py-3 pr-4"><span class="badge-blue">{{ getPlanName(m) }}</span></td>
+          <td class="py-3 pr-4 text-white/60">{{ m.joinDate | date:'mediumDate' }}</td>
+          <td class="py-3 pr-4 text-right space-x-3">
+            <button class="text-neon-orange hover:text-neon-orange-light text-sm underline underline-offset-2" (click)="viewDetails(m)">View Details</button>
+            <button class="text-red-400 hover:text-red-300 text-sm underline underline-offset-2" (click)="deleteMember(m)">Delete</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="5" class="py-6 text-center text-white/40">No members yet.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+@if (selectedMember(); as member) {
+  <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-bg-panel border border-white/10 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-fade-up">
+      <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
+        <h3 class="font-display text-xl font-bold">Member Details</h3>
+        <button (click)="closeDetails()" class="text-white/50 hover:text-white transition-colors text-2xl leading-none">&times;</button>
+      </div>
+      <div class="p-6 space-y-4 text-sm text-white/70">
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-white/40 uppercase text-xs">Full Name</span>
+          <span class="font-bold text-white">{{ member.name }}</span>
+        </div>
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-white/40 uppercase text-xs">Email</span>
+          <span class="text-white">{{ member.email }}</span>
+        </div>
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-white/40 uppercase text-xs">Join Date</span>
+          <span class="text-white">{{ member.joinDate | date:'mediumDate' }}</span>
+        </div>
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-white/40 uppercase text-xs">Membership Plan</span>
+          <span class="text-neon-blue font-medium">{{ getPlanName(member) }}</span>
+        </div>
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-white/40 uppercase text-xs">Personal Trainer</span>
+          <span class="text-neon-orange font-medium">{{ getTrainerName(member) }}</span>
+        </div>
+        <div>
+          <span class="text-white/40 uppercase text-xs block mb-2">Booked Classes</span>
+          @if (getMemberClasses(member._id).length === 0) {
+            <div class="text-white/40 italic">No classes booked yet.</div>
+          } @else {
+            <ul class="space-y-2">
+              @for (c of getMemberClasses(member._id); track c._id) {
+                <li class="bg-white/5 p-2 rounded flex justify-between">
+                  <span class="text-white font-medium">{{ c.name }}</span>
+                  <span class="text-white/50 text-xs">{{ c.day }} at {{ c.startTime }}</span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+      <div class="p-6 pt-0 text-right">
+        <button (click)="closeDetails()" class="bg-white/10 hover:bg-white/20 px-6 py-2 rounded-xl text-sm transition-colors text-white font-medium">Close</button>
+      </div>
+    </div>
+  </div>
+}

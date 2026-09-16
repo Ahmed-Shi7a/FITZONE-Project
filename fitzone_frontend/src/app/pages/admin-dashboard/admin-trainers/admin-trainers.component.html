@@ -1,0 +1,90 @@
+<div class="glow-card p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="font-display text-lg font-bold">Trainers</h2>
+    <button class="btn-neon text-sm" (click)="openModal()">+ Add Trainer</button>
+  </div>
+  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+    @for (t of trainers(); track t._id) {
+      <div class="bg-bg-panel rounded-xl p-5 border border-white/5 text-center">
+        <div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-neon-orange to-neon-blue flex items-center justify-center font-display font-bold mb-3">{{ t.initials || getInitials(t.name) }}</div>
+        <h3 class="font-display font-bold">{{ t.name }}</h3>
+        <p class="text-neon-orange-light text-xs mb-2">{{ t.specialty }}</p>
+        <p class="text-white/50 text-xs mb-4">{{ t.experience || t.experienceYears }}y experience &middot; &#9733;{{ t.rating || 5 }}</p>
+        <div class="flex gap-3 justify-center text-sm">
+          <button class="text-neon-orange underline underline-offset-2" (click)="viewDetails(t)">View Details</button>
+          <button class="text-neon-blue underline underline-offset-2" (click)="openModal(t)">Edit</button>
+          <button class="text-red-400 underline underline-offset-2" (click)="delete(t)">Delete</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<app-modal [open]="modalOpen()" [title]="editingId() ? 'Edit Trainer' : 'Add Trainer'" (close)="close()">
+  <form [formGroup]="form" (ngSubmit)="save()" class="space-y-4">
+    <div>
+      <label class="block text-xs uppercase text-white/40 mb-1">Full Name</label>
+      <input class="input-neon" placeholder="e.g. Ahmed Ali" formControlName="name" />
+    </div>
+    <div>
+      <label class="block text-xs uppercase text-white/40 mb-1">Specialty</label>
+      <input class="input-neon" placeholder="e.g. Weightlifting" formControlName="specialty" />
+    </div>
+    <div>
+      <label class="block text-xs uppercase text-white/40 mb-1">Years of Experience</label>
+      <input class="input-neon" type="number" placeholder="e.g. 5" formControlName="experienceYears" />
+    </div>
+    <div>
+      <label class="block text-xs uppercase text-white/40 mb-1">Short Bio</label>
+      <textarea class="input-neon" rows="3" placeholder="Brief background about the trainer..." formControlName="bio"></textarea>
+    </div>
+    <button type="submit" class="btn-neon w-full mt-2">Save Trainer</button>
+  </form>
+</app-modal>
+
+@if (selectedTrainer(); as trainer) {
+  <div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-bg-panel border border-white/10 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-fade-up">
+      <div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
+        <h3 class="font-display text-xl font-bold">Trainer Details</h3>
+        <button (click)="closeDetails()" class="text-white/50 hover:text-white transition-colors text-2xl leading-none">&times;</button>
+      </div>
+      <div class="p-6 space-y-4 text-sm text-white/70">
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-white/40 uppercase text-xs">Trainer Name</span>
+          <span class="font-bold text-white">{{ trainer.name }}</span>
+        </div>
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-white/40 uppercase text-xs">Specialty</span>
+          <span class="text-neon-orange font-medium">{{ trainer.specialty }}</span>
+        </div>
+        <div class="flex justify-between border-b border-white/5 pb-2">
+          <span class="text-white/40 uppercase text-xs">Experience</span>
+          <span class="text-white">{{ trainer.experience || trainer.experienceYears }} years (&#9733;{{ trainer.rating || 5 }})</span>
+        </div>
+        <div>
+          <span class="text-white/40 uppercase text-xs block mb-2">Bio</span>
+          <p class="text-white/60 leading-relaxed">{{ trainer.bio }}</p>
+        </div>
+        <div>
+          <span class="text-white/40 uppercase text-xs block mb-2">Assigned Members ({{ getTrainerMembers(trainer._id).length }})</span>
+          @if (getTrainerMembers(trainer._id).length === 0) {
+            <div class="text-white/40 italic">No members assigned yet.</div>
+          } @else {
+            <ul class="space-y-2 max-h-40 overflow-y-auto pr-2">
+              @for (m of getTrainerMembers(trainer._id); track m._id) {
+                <li class="bg-white/5 p-2 rounded flex justify-between items-center">
+                  <span class="text-white font-medium">{{ m.name }}</span>
+                  <span class="text-white/50 text-xs">{{ m.email }}</span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+      <div class="p-6 pt-0 text-right">
+        <button (click)="closeDetails()" class="bg-white/10 hover:bg-white/20 px-6 py-2 rounded-xl text-sm transition-colors text-white font-medium">Close</button>
+      </div>
+    </div>
+  </div>
+}

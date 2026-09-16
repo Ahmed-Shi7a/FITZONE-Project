@@ -1,0 +1,47 @@
+<div class="min-h-screen bg-bg-deep">
+  <app-navbar></app-navbar>
+
+  <div class="section-container py-14">
+    @if (plan(); as p) {
+      <span class="badge-neon mb-4 inline-block">Membership Plan</span>
+      <h1 class="font-display text-4xl font-bold mb-2">{{ p.name }}</h1>
+      <p class="text-white/50 mb-6">{{ p.tagline }}</p>
+      <div class="glow-card p-8 max-w-lg">
+        <div class="text-4xl font-display font-bold mb-4">{{ p.price }} <span class="text-base text-white/40 font-normal">EGP / {{ p.billingCycle }}</span></div>
+        <ul class="space-y-2 text-white/70 mb-8">
+          @for (f of p.features; track f) { <li class="flex gap-2"><span class="text-neon-orange-light">&#10003;</span>{{ f }}</li> }
+        </ul>
+        <a routerLink="/signup" class="btn-neon w-full text-center block">Join With This Plan</a>
+      </div>
+    } @else if (trainer()) {
+      <span class="badge-blue mb-4 inline-block">Trainer Profile</span>
+      <h1 class="font-display text-4xl font-bold mb-2">{{ trainer()?.name }}</h1>
+      <p class="text-neon-orange-light mb-6">{{ trainer()?.specialty }}</p>
+      <div class="glow-card p-8 max-w-lg">
+        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-neon-orange to-neon-blue flex items-center justify-center font-display font-bold text-2xl mb-4">{{ trainer()?.initials }}</div>
+        <p class="text-white/70 mb-4">{{ trainer()?.bio }}</p>
+        <div class="flex gap-4 text-sm text-white/50">
+          <span>&#9733; {{ trainer()?.rating }} rating</span>
+          <span>{{ trainer()?.experienceYears }} years experience</span>
+        </div>
+      </div>
+    } @else if (gymClass()) {
+      <span class="badge-blue mb-4 inline-block">{{ gymClass()?.category }} Class</span>
+      <h1 class="font-display text-4xl font-bold mb-2">{{ gymClass()?.name }}</h1>
+      <p class="text-white/50 mb-6">{{ gymClass()?.day }} &middot; {{ gymClass()?.startTime }} ({{ gymClass()?.durationMins }} min) &middot; {{ gymClass()?.room }}</p>
+      <div class="glow-card p-8 max-w-lg">
+        <p class="text-white/70 mb-4">Coached by <span class="text-neon-orange-light font-semibold">{{ data.trainerName(gymClass()?.trainerId!) }}</span></p>
+        <p class="text-white/50 text-sm mb-6">{{ gymClass()?.bookedMemberIds?.length }} / {{ gymClass()?.capacity }} spots filled</p>
+        <a routerLink="/signin" class="btn-neon w-full text-center block">Sign In To Book</a>
+      </div>
+    } @else {
+      <div class="glow-card p-10 text-center max-w-lg mx-auto">
+        <h1 class="font-display text-2xl font-bold mb-2">Item Not Found</h1>
+        <p class="text-white/50 mb-6">This item may have been removed or the link is incorrect.</p>
+        <a routerLink="/home" class="btn-neon">Back to Home</a>
+      </div>
+    }
+  </div>
+
+  <app-footer></app-footer>
+</div>
